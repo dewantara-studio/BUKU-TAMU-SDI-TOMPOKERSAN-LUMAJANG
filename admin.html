@@ -56,6 +56,9 @@
           <button class="btn btn-garis" id="tombolMuatUlang" style="padding:9px 16px; font-size:13.5px;">Muat Ulang</button>
         </div>
         <div class="ekspor-grup">
+          <button class="btn" id="btnHapusTerpilih" style="background:#fbe9e6; color:var(--merah); display:none;" disabled>
+            Hapus Terpilih (<span id="jumlahTerpilih">0</span>)
+          </button>
           <button class="btn btn-emas" id="btnExcel">Ekspor Excel</button>
           <button class="btn btn-utama" id="btnPdf">Ekspor PDF</button>
           <button class="btn btn-garis" id="btnWord">Ekspor Word</button>
@@ -67,6 +70,7 @@
           <table class="tabel-tamu">
             <thead>
               <tr>
+                <th style="width:36px;"><input type="checkbox" id="pilihSemua" /></th>
                 <th>#</th><th>Hari / Tanggal</th><th>Kategori</th><th>Dari / Instansi</th>
                 <th>Nama</th><th>Jabatan</th><th>Tujuan &amp; Keperluan</th><th>Pesan / Saran</th><th>TTD</th><th>Petugas</th>
               </tr>
@@ -92,6 +96,7 @@
 <script>
 let semuaData = [];
 let dataTerfilter = [];
+const terpilih = new Set();
 
 wajibLogin((user) => {
   if (!ADMIN_EMAILS.includes(user.email)) {
@@ -107,13 +112,15 @@ document.getElementById("tombolMuatUlang").addEventListener("click", muatData);
 
 async function muatData() {
   const tabel = document.getElementById("isiTabel");
-  tabel.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:30px;">Memuat data…</td></tr>`;
+  tabel.innerHTML = `<tr><td colspan="11" style="text-align:center; padding:30px;">Memuat data…</td></tr>`;
   try {
     semuaData = await ambilSemuaTamu();
   } catch (e) {
-    tabel.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:30px; color:var(--merah);">Gagal memuat data. Periksa koneksi internet.</td></tr>`;
+    tabel.innerHTML = `<tr><td colspan="11" style="text-align:center; padding:30px; color:var(--merah);">Gagal memuat data. Periksa koneksi internet.</td></tr>`;
     return;
   }
+  terpilih.clear();
+  perbaruiTombolHapus();
   perbaruiStatistik();
   terapkanFilter();
 }
@@ -153,6 +160,7 @@ function gambarTabel(list) {
   if (list.length === 0) {
     tabel.innerHTML = "";
     kosong.style.display = "block";
+    document.getElementById("pilihSemua").checked = false;
     return;
   }
   kosong.style.display = "none";
@@ -163,6 +171,7 @@ function gambarTabel(list) {
       : "-";
     const nama = d.kategori === "wali" ? "-" : escapeHtml(d.namaTamu);
     return `<tr>
+      <td><input type="checkbox" class="pilihBaris" data-id="${d.id}" ${terpilih.has(d.id) ? "checked" : ""} /></td>
       <td>${i + 1}</td>
       <td>${escapeHtml(d.hari)}<br/><span style="color:var(--tinta-lembut);">${escapeHtml(d.tanggal)}</span></td>
       <td><span class="lencana ${d.kategori}">${labelKategori(d.kategori)}</span></td>
@@ -175,7 +184,61 @@ function gambarTabel(list) {
       <td>${escapeHtml(d.dicatatOleh)}</td>
     </tr>`;
   }).join("");
+
+  document.querySelectorAll(".pilihBaris").forEach((cb) => {
+    cb.addEventListener("change", () => {
+      if (cb.checked) terpilih.add(cb.dataset.id);
+      else terpilih.delete(cb.dataset.id);
+      perbaruiTombolHapus();
+      sinkronkanPilihSemua();
+    });
+  });
+  sinkronkanPilihSemua();
 }
+
+function sinkronkanPilihSemua() {
+  const kotakSemua = document.getElementById("pilihSemua");
+  const idTampil = dataTerfilter.map((d) => d.id);
+  const semuaTerpilih = idTampil.length > 0 && idTampil.every((id) => terpilih.has(id));
+  kotakSemua.checked = semuaTerpilih;
+}
+
+function perbaruiTombolHapus() {
+  const tombol = document.getElementById("btnHapusTerpilih");
+  const jumlah = document.getElementById("jumlahTerpilih");
+  jumlah.textContent = terpilih.size;
+  tombol.style.display = terpilih.size > 0 ? "inline-flex" : "none";
+  tombol.disabled = terpilih.size === 0;
+}
+
+document.getElementById("pilihSemua").addEventListener("change", (e) => {
+  const idTampil = dataTerfilter.map((d) => d.id);
+  if (e.target.checked) idTampil.forEach((id) => terpilih.add(id));
+  else idTampil.forEach((id) => terpilih.delete(id));
+  gambarTabel(dataTerfilter);
+  perbaruiTombolHapus();
+});
+
+document.getElementById("btnHapusTerpilih").addEventListener("click", async () => {
+  const jumlah = terpilih.size;
+  if (jumlah === 0) return;
+  const yakin = confirm(`Hapus ${jumlah} data buku tamu yang dipilih? Tindakan ini tidak dapat dibatalkan.`);
+  if (!yakin) return;
+
+  const tombol = document.getElementById("btnHapusTerpilih");
+  tombol.disabled = true;
+  tombol.textContent = "Menghapus…";
+  try {
+    await hapusTamu(Array.from(terpilih));
+    terpilih.clear();
+    await muatData();
+    return;
+  } catch (e) {
+    alert("Gagal menghapus data. Periksa koneksi internet lalu coba lagi.");
+  }
+  tombol.disabled = terpilih.size === 0;
+  tombol.innerHTML = `Hapus Terpilih (<span id="jumlahTerpilih">${terpilih.size}</span>)`;
+});
 
 document.getElementById("btnExcel").addEventListener("click", () => eksporExcel(dataTerfilter));
 document.getElementById("btnPdf").addEventListener("click", () => eksporPDF(dataTerfilter));

@@ -120,12 +120,12 @@
 
           <!-- ==================== TANDA TANGAN (semua kategori) ==================== -->
           <div class="field" id="blokTtd" style="display:none;">
-            <label>Tanda Tangan <span style="font-weight:400; color:var(--tinta-lembut);">(opsional)</span></label>
+            <label>Tanda Tangan <span style="font-weight:400; color:var(--merah);">(wajib diisi)</span></label>
             <div class="tt-pad-bungkus">
               <canvas id="padTtd" class="tt-pad" height="160"></canvas>
             </div>
             <div class="tt-aksi">
-              <span class="hint">Gambar tanda tangan dengan jari/mouse. Boleh dilewati jika perangkat tidak mendukung.</span>
+              <span class="hint">Gambar tanda tangan dengan jari/mouse sebelum menyimpan.</span>
               <button type="button" class="btn-teks" id="hapusTtd">Hapus</button>
             </div>
           </div>
@@ -260,7 +260,13 @@ document.getElementById("formTamu").addEventListener("submit", async (e) => {
     }
   }
 
-  data.tandaTangan = adaGoresan ? canvas.toDataURL("image/png") : null;
+  if (!adaGoresan) {
+    galat.textContent = "Tanda tangan wajib diisi. Silakan tanda tangan pada kotak yang tersedia.";
+    galat.style.display = "block";
+    document.getElementById("blokTtd").scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  data.tandaTangan = canvas.toDataURL("image/png");
 
   tombolKirim.disabled = true;
   tombolKirim.textContent = "Menyimpan…";
