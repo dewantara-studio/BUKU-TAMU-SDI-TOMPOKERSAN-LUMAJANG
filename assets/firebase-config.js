@@ -25,5 +25,5 @@ auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 /* Daftar email yang boleh membuka Dashboard Admin.
    Tambahkan email staf lain dengan koma di antaranya. */
 const ADMIN_EMAILS = [
-  "admin@sditompokersan.sch.id"
+  "sdi.tompokersanlumajang@gmail.com"
 ];
