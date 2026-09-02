@@ -168,6 +168,10 @@ opsiKategori.forEach((opsi) => {
     blok[opsi.dataset.kat].style.display = "block";
     blokTtd.style.display = "block";
     tombolKirim.style.display = "block";
+
+    // Kotak tanda tangan baru punya ukuran nyata setelah tidak lagi "display:none",
+    // jadi kanvas diukur ulang di sini (bukan hanya saat halaman dimuat).
+    requestAnimationFrame(ukuranUlangKanvas);
   });
 });
 
@@ -177,14 +181,21 @@ const ctx = canvas.getContext("2d");
 let menggambar = false, adaGoresan = false;
 
 function ukuranUlangKanvas() {
+  const gambarSebelumnya = adaGoresan ? canvas.toDataURL("image/png") : null;
   const rasio = window.devicePixelRatio || 1;
-  const lebar = canvas.clientWidth;
+  const lebar = canvas.clientWidth || canvas.parentElement.clientWidth || 300;
   canvas.width = lebar * rasio;
   canvas.height = 160 * rasio;
   ctx.scale(rasio, rasio);
   ctx.lineWidth = 2.2;
   ctx.lineCap = "round";
   ctx.strokeStyle = "#151c4a";
+
+  if (gambarSebelumnya) {
+    const gambar = new Image();
+    gambar.onload = () => ctx.drawImage(gambar, 0, 0, lebar, 160);
+    gambar.src = gambarSebelumnya;
+  }
 }
 window.addEventListener("resize", ukuranUlangKanvas);
 ukuranUlangKanvas();
