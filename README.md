@@ -79,11 +79,15 @@ tempat hosting filenya.
   - **Umum** → Nama, Tujuan & Keperluan, Pesan/Saran, Tanda Tangan.
   - **Wali Murid** → Wali dari (nama siswa), pilihan Ayah Kandung/Ibu
     Kandung/Wali, Tujuan & Keperluan, Pesan/Saran, Tanda Tangan.
-- **Tanda tangan bersifat opsional** — tamu boleh melewatinya jika perangkat
-  (misalnya PC dengan mouse) kurang nyaman untuk menandatangani di layar.
+- **Tanda tangan bersifat wajib** — tombol "Simpan Buku Tamu" akan menolak
+  data jika kotak tanda tangan masih kosong, untuk semua kategori tamu.
 - **Dasbor Admin** (`admin.html`) hanya bisa dibuka oleh email yang terdaftar
-  di `ADMIN_EMAILS`. Di sana admin bisa memfilter data dan mengunduhnya
-  sebagai **Excel (.xlsx)**, **PDF**, atau **Word (.doc)**.
+  di `ADMIN_EMAILS`. Di sana admin bisa:
+  - memfilter/mencari data,
+  - mencentang satu atau beberapa baris lalu menekan **Hapus Terpilih** untuk
+    menghapus data yang salah input,
+  - mengunduh data (sesuai filter yang aktif) sebagai **Excel (.xlsx)**,
+    **PDF**, atau **Word (.doc)**.
 
 ## Mengganti logo
 
