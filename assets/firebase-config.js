@@ -5,12 +5,13 @@
    Lihat README.md langkah 1-3 untuk cara membuatnya (gratis).
    ============================================================ */
 const firebaseConfig = {
-  apiKey: "GANTI_DENGAN_API_KEY",
-  authDomain: "GANTI.firebaseapp.com",
-  projectId: "GANTI_PROJECT_ID",
-  storageBucket: "GANTI.appspot.com",
-  messagingSenderId: "GANTI_SENDER_ID",
-  appId: "GANTI_APP_ID"
+  apiKey: "AIzaSyAVhpDeLtZmvU6kNOMWl_Mx2JaOyvOmXqg",
+  authDomain: "bukutamu-sdi-tompokersan.firebaseapp.com",
+  projectId: "bukutamu-sdi-tompokersan",
+  storageBucket: "bukutamu-sdi-tompokersan.firebasestorage.app",
+  messagingSenderId: "362345784411",
+  appId: "1:362345784411:web:6cf9999a72dfe59095cb7e",
+  measurementId: "G-JS2LWNBFL5"
 };
 
 firebase.initializeApp(firebaseConfig);
