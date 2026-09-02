@@ -55,6 +55,13 @@ async function ambilSemuaTamu() {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
+/** Hapus satu atau beberapa entri tamu berdasarkan id dokumen Firestore. */
+async function hapusTamu(idList) {
+  const batch = db.batch();
+  idList.forEach((id) => batch.delete(db.collection(KOLEKSI).doc(id)));
+  return batch.commit();
+}
+
 function labelKategori(kat) {
   return { dinas: "Dinas", umum: "Umum", wali: "Wali Murid" }[kat] || kat;
 }
