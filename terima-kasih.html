@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Terima Kasih — SDI Tompokersan Lumajang</title>
+<link rel="icon" href="assets/logo.png" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<div class="lattice"></div>
+
+<main class="page">
+  <div class="page-pad" style="justify-content:center; align-items:center; flex:1; text-align:center;">
+    <div class="center-460">
+      <div style="width:96px;height:96px;border-radius:50%;background:var(--hijau-100); display:flex; align-items:center; justify-content:center; margin:0 auto 24px;">
+        <svg width="46" height="46" viewBox="0 0 24 24" fill="none">
+          <path d="M4 12.5l5 5L20 6.5" stroke="var(--hijau-700)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 class="serif" style="font-size:clamp(24px,4vw,32px); color:var(--hijau-900); margin:0 0 12px;">Terima Kasih</h1>
+      <p style="color:var(--tinta-lembut); font-size:15.5px; margin:0 0 8px;">
+        Buku tamu Bapak/Ibu/Saudara telah berhasil tersimpan.
+      </p>
+      <p style="color:var(--tinta-lembut); font-size:14px; margin:0 0 30px;">
+        Semoga kunjungan hari ini bermanfaat dan berkah. Barakallahu fiikum.
+      </p>
+      <a href="welcome.html" class="btn btn-utama">Kembali ke Halaman Utama</a>
+      <p style="color:var(--tinta-lembut); font-size:12.5px; margin-top:16px;">
+        Otomatis kembali dalam <span id="hitung">8</span> detik…
+      </p>
+    </div>
+  </div>
+</main>
+
+<script>
+let sisa = 8;
+const el = document.getElementById("hitung");
+const t = setInterval(() => {
+  sisa -= 1;
+  el.textContent = sisa;
+  if (sisa <= 0) { clearInterval(t); window.location.href = "welcome.html"; }
+}, 1000);
+</script>
+</body>
+</html>

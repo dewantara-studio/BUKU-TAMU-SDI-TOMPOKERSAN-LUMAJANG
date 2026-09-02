@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dasbor Admin — Buku Tamu SDI Tompokersan Lumajang</title>
+<link rel="icon" href="assets/logo.png" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<div class="lattice"></div>
+
+<main class="page">
+  <div class="page-pad" style="align-items:center; flex:1;">
+
+    <div class="topbar">
+      <div class="identitas">
+        <img src="assets/logo.png" alt="Lambang sekolah" />
+        <div>
+          <strong>Dasbor Admin</strong>
+          <span>Buku Tamu — SDI Tompokersan Lumajang</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <a href="welcome.html" class="btn btn-garis" style="padding:9px 16px; font-size:13.5px;">&larr; Kios</a>
+        <button class="btn btn-teks" id="tombolKeluar">Keluar</button>
+      </div>
+    </div>
+
+    <div id="ditolak" class="center-560" style="display:none; text-align:center; margin-top:60px;">
+      <div class="kartu" style="padding:34px;">
+        <h2 class="serif" style="color:var(--merah); margin-top:0;">Akses Ditolak</h2>
+        <p style="color:var(--tinta-lembut);">Akun ini tidak terdaftar sebagai admin. Hubungi Tata Usaha untuk meminta akses.</p>
+        <a href="welcome.html" class="btn btn-utama">Kembali ke Kios</a>
+      </div>
+    </div>
+
+    <div id="isiDasbor" style="display:none; width:100%; display:flex; flex-direction:column; align-items:center;">
+
+      <div class="stat-grid">
+        <div class="stat-kartu"><div class="angka" id="statTotal">0</div><div class="label">Total Tamu</div></div>
+        <div class="stat-kartu"><div class="angka" id="statDinas">0</div><div class="label">Dinas</div></div>
+        <div class="stat-kartu"><div class="angka" id="statUmum">0</div><div class="label">Umum</div></div>
+        <div class="stat-kartu"><div class="angka" id="statWali">0</div><div class="label">Wali Murid</div></div>
+      </div>
+
+      <div class="toolbar">
+        <div class="filter-grup">
+          <select id="filterKategori">
+            <option value="semua">Semua kategori</option>
+            <option value="dinas">Dinas</option>
+            <option value="umum">Umum</option>
+            <option value="wali">Wali Murid</option>
+          </select>
+          <input type="text" id="filterCari" placeholder="Cari nama / tujuan…" />
+          <button class="btn btn-garis" id="tombolMuatUlang" style="padding:9px 16px; font-size:13.5px;">Muat Ulang</button>
+        </div>
+        <div class="ekspor-grup">
+          <button class="btn btn-emas" id="btnExcel">Ekspor Excel</button>
+          <button class="btn btn-utama" id="btnPdf">Ekspor PDF</button>
+          <button class="btn btn-garis" id="btnWord">Ekspor Word</button>
+        </div>
+      </div>
+
+      <div class="center-1080">
+        <div class="tabel-bungkus">
+          <table class="tabel-tamu">
+            <thead>
+              <tr>
+                <th>#</th><th>Hari / Tanggal</th><th>Kategori</th><th>Dari / Instansi</th>
+                <th>Nama</th><th>Jabatan</th><th>Tujuan &amp; Keperluan</th><th>Pesan / Saran</th><th>TTD</th><th>Petugas</th>
+              </tr>
+            </thead>
+            <tbody id="isiTabel"></tbody>
+          </table>
+        </div>
+        <div class="kosong" id="pesanKosong" style="display:none;">Belum ada data yang cocok dengan pencarian ini.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/app.js"></script>
+<script src="assets/export.js"></script>
+<script>
+let semuaData = [];
+let dataTerfilter = [];
+
+wajibLogin((user) => {
+  if (!ADMIN_EMAILS.includes(user.email)) {
+    document.getElementById("ditolak").style.display = "block";
+    return;
+  }
+  document.getElementById("isiDasbor").style.display = "flex";
+  muatData();
+});
+
+document.getElementById("tombolKeluar").addEventListener("click", keluarAkun);
+document.getElementById("tombolMuatUlang").addEventListener("click", muatData);
+
+async function muatData() {
+  const tabel = document.getElementById("isiTabel");
+  tabel.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:30px;">Memuat data…</td></tr>`;
+  try {
+    semuaData = await ambilSemuaTamu();
+  } catch (e) {
+    tabel.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:30px; color:var(--merah);">Gagal memuat data. Periksa koneksi internet.</td></tr>`;
+    return;
+  }
+  perbaruiStatistik();
+  terapkanFilter();
+}
+
+function perbaruiStatistik() {
+  document.getElementById("statTotal").textContent = semuaData.length;
+  document.getElementById("statDinas").textContent = semuaData.filter((d) => d.kategori === "dinas").length;
+  document.getElementById("statUmum").textContent = semuaData.filter((d) => d.kategori === "umum").length;
+  document.getElementById("statWali").textContent = semuaData.filter((d) => d.kategori === "wali").length;
+}
+
+function terapkanFilter() {
+  const kat = document.getElementById("filterKategori").value;
+  const kata = document.getElementById("filterCari").value.trim().toLowerCase();
+
+  dataTerfilter = semuaData.filter((d) => {
+    if (kat !== "semua" && d.kategori !== kat) return false;
+    if (!kata) return true;
+    const gabungan = [d.namaTamu, d.dari, d.waliDari, d.jabatan, d.tujuan, d.pesan].filter(Boolean).join(" ").toLowerCase();
+    return gabungan.includes(kata);
+  });
+
+  gambarTabel(dataTerfilter);
+}
+
+document.getElementById("filterKategori").addEventListener("change", terapkanFilter);
+document.getElementById("filterCari").addEventListener("input", terapkanFilter);
+
+function escapeHtml(s) {
+  return (s || "").toString().replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function gambarTabel(list) {
+  const tabel = document.getElementById("isiTabel");
+  const kosong = document.getElementById("pesanKosong");
+
+  if (list.length === 0) {
+    tabel.innerHTML = "";
+    kosong.style.display = "block";
+    return;
+  }
+  kosong.style.display = "none";
+
+  tabel.innerHTML = list.map((d, i) => {
+    const dariInstansi = d.kategori === "dinas" ? escapeHtml(d.dari)
+      : d.kategori === "wali" ? `${escapeHtml(d.waliJenis)} dari ${escapeHtml(d.waliDari)}`
+      : "-";
+    const nama = d.kategori === "wali" ? "-" : escapeHtml(d.namaTamu);
+    return `<tr>
+      <td>${i + 1}</td>
+      <td>${escapeHtml(d.hari)}<br/><span style="color:var(--tinta-lembut);">${escapeHtml(d.tanggal)}</span></td>
+      <td><span class="lencana ${d.kategori}">${labelKategori(d.kategori)}</span></td>
+      <td>${dariInstansi}</td>
+      <td>${nama}</td>
+      <td>${escapeHtml(d.jabatan) || "-"}</td>
+      <td style="max-width:220px;">${escapeHtml(d.tujuan)}</td>
+      <td style="max-width:200px;">${escapeHtml(d.pesan) || "-"}</td>
+      <td>${d.tandaTangan ? `<img src="${d.tandaTangan}" class="tandatangan-pratinjau" alt="Tanda tangan" style="max-width:70px;"/>` : "-"}</td>
+      <td>${escapeHtml(d.dicatatOleh)}</td>
+    </tr>`;
+  }).join("");
+}
+
+document.getElementById("btnExcel").addEventListener("click", () => eksporExcel(dataTerfilter));
+document.getElementById("btnPdf").addEventListener("click", () => eksporPDF(dataTerfilter));
+document.getElementById("btnWord").addEventListener("click", () => eksporWord(dataTerfilter));
+</script>
+</body>
+</html>

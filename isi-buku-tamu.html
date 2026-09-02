@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Isi Buku Tamu — SDI Tompokersan Lumajang</title>
+<link rel="icon" href="assets/logo.png" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<div class="lattice"></div>
+
+<main class="page">
+  <div class="page-pad" style="justify-content:center; flex:1;">
+    <div class="center-560">
+
+      <div class="topbar" style="max-width:none; margin-bottom:22px;">
+        <div class="identitas">
+          <img src="assets/logo.png" alt="Lambang sekolah" />
+          <div>
+            <strong>Buku Tamu</strong>
+            <span>SD Islam Tompokersan Lumajang</span>
+          </div>
+        </div>
+        <a href="welcome.html" class="btn btn-teks">&larr; Batal</a>
+      </div>
+
+      <div class="arch-frame">
+        <h2 class="serif" style="margin:0 0 4px; font-size:22px; color:var(--navy-900); text-align:center;">Formulir Buku Tamu</h2>
+        <p style="text-align:center; color:var(--tinta-lembut); font-size:13.5px; margin:0 0 26px;" id="tanggalTampil"></p>
+
+        <div id="galat" class="pesan-galat" style="display:none;"></div>
+
+        <form id="formTamu">
+
+          <div class="field">
+            <label>Kategori Tamu</label>
+            <div class="kategori-pilih">
+              <label class="kategori-opsi" data-kat="dinas">
+                <input type="radio" name="kategori" value="dinas" />
+                <span class="judul">Dinas</span>
+                <span class="sub">Instansi / kedinasan</span>
+              </label>
+              <label class="kategori-opsi" data-kat="umum">
+                <input type="radio" name="kategori" value="umum" />
+                <span class="judul">Umum</span>
+                <span class="sub">Masyarakat umum</span>
+              </label>
+              <label class="kategori-opsi" data-kat="wali">
+                <input type="radio" name="kategori" value="wali" />
+                <span class="judul">Wali Murid</span>
+                <span class="sub">Orang tua / wali siswa</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- ==================== FORM: DINAS ==================== -->
+          <div class="blok-kategori" id="blokDinas" style="display:none;">
+            <div class="field">
+              <label for="dinasDari">Dari (Instansi / Tempat Tugas)</label>
+              <input type="text" id="dinasDari" placeholder="Contoh: Dinas Pendidikan Kab. Lumajang" />
+            </div>
+            <div class="field">
+              <label for="dinasNama">Nama Tamu</label>
+              <input type="text" id="dinasNama" placeholder="Nama lengkap" />
+            </div>
+            <div class="field">
+              <label for="dinasJabatan">Jabatan</label>
+              <input type="text" id="dinasJabatan" placeholder="Contoh: Pengawas Sekolah" />
+            </div>
+            <div class="field">
+              <label for="dinasTujuan">Tujuan dan Keperluan</label>
+              <textarea id="dinasTujuan" placeholder="Jelaskan tujuan kunjungan"></textarea>
+            </div>
+            <div class="field">
+              <label for="dinasPesan">Pesan / Saran <span style="font-weight:400; color:var(--tinta-lembut);">(opsional)</span></label>
+              <textarea id="dinasPesan" placeholder="Pesan atau saran untuk sekolah"></textarea>
+            </div>
+          </div>
+
+          <!-- ==================== FORM: UMUM ==================== -->
+          <div class="blok-kategori" id="blokUmum" style="display:none;">
+            <div class="field">
+              <label for="umumNama">Nama</label>
+              <input type="text" id="umumNama" placeholder="Nama lengkap" />
+            </div>
+            <div class="field">
+              <label for="umumTujuan">Tujuan dan Keperluan</label>
+              <textarea id="umumTujuan" placeholder="Jelaskan tujuan kunjungan"></textarea>
+            </div>
+            <div class="field">
+              <label for="umumPesan">Pesan / Saran <span style="font-weight:400; color:var(--tinta-lembut);">(opsional)</span></label>
+              <textarea id="umumPesan" placeholder="Pesan atau saran untuk sekolah"></textarea>
+            </div>
+          </div>
+
+          <!-- ==================== FORM: WALI MURID ==================== -->
+          <div class="blok-kategori" id="blokWali" style="display:none;">
+            <div class="field">
+              <label for="waliDari">Wali dari (Nama Siswa)</label>
+              <input type="text" id="waliDari" placeholder="Nama siswa yang diampu" />
+            </div>
+            <div class="field">
+              <label>Selaku</label>
+              <div class="wali-jenis">
+                <label><input type="radio" name="waliJenis" value="Ayah Kandung" /><span>Ayah Kandung</span></label>
+                <label><input type="radio" name="waliJenis" value="Ibu Kandung" /><span>Ibu Kandung</span></label>
+                <label><input type="radio" name="waliJenis" value="Wali" /><span>Wali</span></label>
+              </div>
+            </div>
+            <div class="field">
+              <label for="waliTujuan">Tujuan dan Keperluan</label>
+              <textarea id="waliTujuan" placeholder="Jelaskan tujuan kunjungan"></textarea>
+            </div>
+            <div class="field">
+              <label for="waliPesan">Pesan / Saran <span style="font-weight:400; color:var(--tinta-lembut);">(opsional)</span></label>
+              <textarea id="waliPesan" placeholder="Pesan atau saran untuk sekolah"></textarea>
+            </div>
+          </div>
+
+          <!-- ==================== TANDA TANGAN (semua kategori) ==================== -->
+          <div class="field" id="blokTtd" style="display:none;">
+            <label>Tanda Tangan <span style="font-weight:400; color:var(--tinta-lembut);">(opsional)</span></label>
+            <div class="tt-pad-bungkus">
+              <canvas id="padTtd" class="tt-pad" height="160"></canvas>
+            </div>
+            <div class="tt-aksi">
+              <span class="hint">Gambar tanda tangan dengan jari/mouse. Boleh dilewati jika perangkat tidak mendukung.</span>
+              <button type="button" class="btn-teks" id="hapusTtd">Hapus</button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-utama btn-lebar" id="tombolKirim" style="margin-top:8px; display:none;">
+            Simpan Buku Tamu
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+let userAktif = null;
+wajibLogin((user) => { userAktif = user; });
+
+const sekarang = new Date();
+document.getElementById("tanggalTampil").textContent =
+  `${namaHariIndonesia(sekarang)}, ${formatTanggalIndonesia(sekarang)}`;
+
+/* ---------- pilih kategori ---------- */
+const blok = { dinas: document.getElementById("blokDinas"), umum: document.getElementById("blokUmum"), wali: document.getElementById("blokWali") };
+const opsiKategori = document.querySelectorAll(".kategori-opsi");
+const blokTtd = document.getElementById("blokTtd");
+const tombolKirim = document.getElementById("tombolKirim");
+
+opsiKategori.forEach((opsi) => {
+  opsi.addEventListener("click", () => {
+    opsiKategori.forEach((o) => o.classList.remove("aktif"));
+    opsi.classList.add("aktif");
+    opsi.querySelector("input").checked = true;
+
+    Object.values(blok).forEach((b) => (b.style.display = "none"));
+    blok[opsi.dataset.kat].style.display = "block";
+    blokTtd.style.display = "block";
+    tombolKirim.style.display = "block";
+  });
+});
+
+/* ---------- pad tanda tangan ---------- */
+const canvas = document.getElementById("padTtd");
+const ctx = canvas.getContext("2d");
+let menggambar = false, adaGoresan = false;
+
+function ukuranUlangKanvas() {
+  const rasio = window.devicePixelRatio || 1;
+  const lebar = canvas.clientWidth;
+  canvas.width = lebar * rasio;
+  canvas.height = 160 * rasio;
+  ctx.scale(rasio, rasio);
+  ctx.lineWidth = 2.2;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "#151c4a";
+}
+window.addEventListener("resize", ukuranUlangKanvas);
+ukuranUlangKanvas();
+
+function posisiDariEvent(e) {
+  const r = canvas.getBoundingClientRect();
+  const titik = e.touches ? e.touches[0] : e;
+  return { x: titik.clientX - r.left, y: titik.clientY - r.top };
+}
+function mulaiGambar(e) { menggambar = true; adaGoresan = true; const p = posisiDariEvent(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }
+function lanjutGambar(e) { if (!menggambar) return; const p = posisiDariEvent(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }
+function selesaiGambar() { menggambar = false; }
+
+canvas.addEventListener("mousedown", mulaiGambar);
+canvas.addEventListener("mousemove", lanjutGambar);
+window.addEventListener("mouseup", selesaiGambar);
+canvas.addEventListener("touchstart", mulaiGambar, { passive: false });
+canvas.addEventListener("touchmove", lanjutGambar, { passive: false });
+canvas.addEventListener("touchend", selesaiGambar);
+
+document.getElementById("hapusTtd").addEventListener("click", () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  adaGoresan = false;
+});
+
+/* ---------- kirim form ---------- */
+const galat = document.getElementById("galat");
+
+document.getElementById("formTamu").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  galat.style.display = "none";
+
+  const kategori = document.querySelector('input[name="kategori"]:checked');
+  if (!kategori) {
+    galat.textContent = "Silakan pilih kategori tamu terlebih dahulu.";
+    galat.style.display = "block";
+    return;
+  }
+  const kat = kategori.value;
+  const data = {
+    kategori: kat,
+    hari: namaHariIndonesia(sekarang),
+    tanggal: formatTanggalIndonesia(sekarang),
+  };
+
+  if (kat === "dinas") {
+    data.dari = document.getElementById("dinasDari").value.trim();
+    data.namaTamu = document.getElementById("dinasNama").value.trim();
+    data.jabatan = document.getElementById("dinasJabatan").value.trim();
+    data.tujuan = document.getElementById("dinasTujuan").value.trim();
+    data.pesan = document.getElementById("dinasPesan").value.trim();
+    if (!data.dari || !data.namaTamu || !data.jabatan || !data.tujuan) {
+      galat.textContent = "Mohon lengkapi Dari, Nama Tamu, Jabatan, dan Tujuan.";
+      galat.style.display = "block"; return;
+    }
+  } else if (kat === "umum") {
+    data.namaTamu = document.getElementById("umumNama").value.trim();
+    data.tujuan = document.getElementById("umumTujuan").value.trim();
+    data.pesan = document.getElementById("umumPesan").value.trim();
+    if (!data.namaTamu || !data.tujuan) {
+      galat.textContent = "Mohon lengkapi Nama dan Tujuan.";
+      galat.style.display = "block"; return;
+    }
+  } else if (kat === "wali") {
+    const jenis = document.querySelector('input[name="waliJenis"]:checked');
+    data.waliDari = document.getElementById("waliDari").value.trim();
+    data.waliJenis = jenis ? jenis.value : "";
+    data.tujuan = document.getElementById("waliTujuan").value.trim();
+    data.pesan = document.getElementById("waliPesan").value.trim();
+    if (!data.waliDari || !data.waliJenis || !data.tujuan) {
+      galat.textContent = "Mohon lengkapi Wali dari, pilihan Selaku, dan Tujuan.";
+      galat.style.display = "block"; return;
+    }
+  }
+
+  data.tandaTangan = adaGoresan ? canvas.toDataURL("image/png") : null;
+
+  tombolKirim.disabled = true;
+  tombolKirim.textContent = "Menyimpan…";
+  try {
+    await simpanTamu(data, userAktif);
+    window.location.href = "terima-kasih.html";
+  } catch (err) {
+    galat.textContent = "Gagal menyimpan data. Periksa koneksi internet lalu coba lagi.";
+    galat.style.display = "block";
+    tombolKirim.disabled = false;
+    tombolKirim.textContent = "Simpan Buku Tamu";
+  }
+});
+</script>
+</body>
+</html>

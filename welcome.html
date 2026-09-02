@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Selamat Datang — SDI Tompokersan Lumajang</title>
+<link rel="icon" href="assets/logo.png" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<div class="lattice"></div>
+
+<main class="page">
+  <div class="page-pad" style="justify-content:space-between; flex:1;">
+
+    <div class="topbar">
+      <div class="identitas">
+        <img src="assets/logo.png" alt="Lambang sekolah" />
+        <div>
+          <strong>SD Islam Tompokersan</strong>
+          <span>Buku Tamu Digital</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <a id="tautanAdmin" href="admin.html" class="btn btn-garis" style="display:none; padding:9px 16px; font-size:13.5px;">Dasbor Admin</a>
+        <button class="btn btn-teks" id="tombolKeluar">Keluar</button>
+      </div>
+    </div>
+
+    <div class="center-560" style="text-align:center; margin:auto 0;">
+      <img class="crest" src="assets/logo.png" alt="" style="width:120px; height:120px; margin-bottom:18px;" />
+      <div class="kop" style="color:var(--tinta-lembut); font-size:14px; margin-bottom:8px;">Assalamu'alaikum warahmatullahi wabarakatuh</div>
+      <h1 class="serif" style="font-size:clamp(28px,5vw,42px); color:var(--hijau-900); margin:0 0 14px;">
+        Selamat Datang di<br/>SD Islam Tompokersan Lumajang
+      </h1>
+      <p style="color:var(--tinta-lembut); font-size:15.5px; max-width:440px; margin:0 auto 34px;">
+        Terima kasih atas kunjungan Bapak/Ibu/Saudara. Silakan isi buku tamu digital kami sebelum melanjutkan keperluan.
+      </p>
+      <button id="tombolIsi" class="btn btn-utama" style="padding:16px 40px; font-size:17px;">
+        Isi Buku Tamu
+      </button>
+      <p style="color:var(--tinta-lembut); font-size:12.5px; margin-top:16px;" id="jamTanggal"></p>
+    </div>
+
+    <footer style="padding:18px 0; color:var(--tinta-lembut); font-size:12px; text-align:center;">
+      Perangkat ini sedang bertugas sebagai <strong>petugas piket</strong>: <span id="emailPetugas"></span>
+    </footer>
+  </div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+wajibLogin((user) => {
+  document.getElementById("emailPetugas").textContent = user.email;
+  if (ADMIN_EMAILS.includes(user.email)) {
+    document.getElementById("tautanAdmin").style.display = "inline-flex";
+  }
+});
+
+document.getElementById("tombolKeluar").addEventListener("click", keluarAkun);
+document.getElementById("tombolIsi").addEventListener("click", () => {
+  window.location.href = "isi-buku-tamu.html";
+});
+
+const sekarang = new Date();
+document.getElementById("jamTanggal").textContent =
+  `${namaHariIndonesia(sekarang)}, ${formatTanggalIndonesia(sekarang)}`;
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Masuk — Buku Tamu SDI Tompokersan Lumajang</title>
+<link rel="icon" href="assets/logo.png" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<div class="lattice"></div>
+
+<main class="page">
+  <div class="page-pad" style="justify-content:center; flex:1;">
+    <div class="center-460">
+
+      <div class="masthead">
+        <img class="crest" src="assets/logo.png" alt="Lambang SD Islam Tompokersan Lumajang" />
+        <div class="kop">Sistem Buku Tamu Digital</div>
+        <h1>SD Islam Tompokersan<br/>Lumajang</h1>
+        <div class="rule"></div>
+      </div>
+
+      <div class="arch-frame">
+        <h2 class="serif" style="margin:0 0 4px; font-size:20px; color:var(--navy-900); text-align:center;">Masuk Petugas</h2>
+        <p style="text-align:center; color:var(--tinta-lembut); font-size:13.5px; margin:0 0 26px;">
+          Khusus petugas piket / resepsionis sekolah untuk membuka perangkat buku tamu.
+        </p>
+
+        <div id="galat" class="pesan-galat" style="display:none;"></div>
+
+        <form id="formMasuk" autocomplete="on">
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" required placeholder="petugas@sditompokersan.sch.id" />
+          </div>
+          <div class="field" style="margin-bottom:26px;">
+            <label for="sandi">Kata sandi</label>
+            <input type="password" id="sandi" required placeholder="••••••••" />
+          </div>
+          <button type="submit" class="btn btn-utama btn-lebar" id="tombolMasuk">Masuk</button>
+        </form>
+
+        <p style="text-align:center; font-size:12.5px; color:var(--tinta-lembut); margin-top:18px; margin-bottom:0;">
+          Lupa akses? Hubungi admin Tata Usaha sekolah.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <footer style="padding:18px; color:var(--tinta-lembut); font-size:12px; text-align:center;">
+    &copy; <span id="tahun"></span> SD Islam Tompokersan Lumajang
+  </footer>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+document.getElementById("tahun").textContent = new Date().getFullYear();
+lewatiJikaSudahLogin();
+
+const form = document.getElementById("formMasuk");
+const galat = document.getElementById("galat");
+const tombol = document.getElementById("tombolMasuk");
+
+const pesanGalat = {
+  "auth/invalid-email": "Format email tidak valid.",
+  "auth/user-not-found": "Akun tidak ditemukan. Hubungi admin sekolah.",
+  "auth/wrong-password": "Kata sandi salah. Coba lagi.",
+  "auth/invalid-credential": "Email atau kata sandi salah.",
+  "auth/too-many-requests": "Terlalu banyak percobaan. Coba beberapa saat lagi.",
+};
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  galat.style.display = "none";
+  tombol.disabled = true;
+  tombol.textContent = "Memeriksa…";
+
+  const email = document.getElementById("email").value.trim();
+  const sandi = document.getElementById("sandi").value;
+
+  auth.signInWithEmailAndPassword(email, sandi)
+    .then(() => { window.location.href = "welcome.html"; })
+    .catch((err) => {
+      galat.textContent = pesanGalat[err.code] || "Gagal masuk. Periksa kembali email dan kata sandi.";
+      galat.style.display = "block";
+      tombol.disabled = false;
+      tombol.textContent = "Masuk";
+    });
+});
+</script>
+</body>
+</html>
