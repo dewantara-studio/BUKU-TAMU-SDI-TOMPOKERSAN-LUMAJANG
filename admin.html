@@ -88,7 +88,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="assets/firebase-config.js"></script>
@@ -241,7 +241,20 @@ document.getElementById("btnHapusTerpilih").addEventListener("click", async () =
   tombol.innerHTML = `Hapus Terpilih (<span id="jumlahTerpilih">${terpilih.size}</span>)`;
 });
 
-document.getElementById("btnExcel").addEventListener("click", () => eksporExcel(dataTerfilter));
+document.getElementById("btnExcel").addEventListener("click", async () => {
+  const tombol = document.getElementById("btnExcel");
+  const asli = tombol.textContent;
+  tombol.disabled = true;
+  tombol.textContent = "Menyiapkan…";
+  try {
+    await eksporExcel(dataTerfilter);
+  } catch (e) {
+    alert("Gagal membuat file Excel.");
+  } finally {
+    tombol.disabled = false;
+    tombol.textContent = asli;
+  }
+});
 document.getElementById("btnPdf").addEventListener("click", () => eksporPDF(dataTerfilter));
 document.getElementById("btnWord").addEventListener("click", () => eksporWord(dataTerfilter));
 </script>

@@ -87,7 +87,8 @@ tempat hosting filenya.
   - mencentang satu atau beberapa baris lalu menekan **Hapus Terpilih** untuk
     menghapus data yang salah input,
   - mengunduh data (sesuai filter yang aktif) sebagai **Excel (.xlsx)**,
-    **PDF**, atau **Word (.doc)**.
+    **PDF**, atau **Word (.doc)** — gambar tanda tangan tamu ikut
+    disematkan langsung di sel/baris masing-masing pada ketiga format ini.
 
 ## Mengganti logo
 
