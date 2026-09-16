@@ -94,3 +94,22 @@ tempat hosting filenya.
 
 Ganti berkas `assets/logo.png` dengan logo lain (nama file harus tetap
 `logo.png`, atau ubah semua rujukan `assets/logo.png` di setiap halaman HTML).
+
+## Google Analytics
+
+Setiap halaman (login, welcome, form, terima kasih, admin) sudah dipasangi
+tag Google Analytics 4 dengan ID **G-JS2LWNBFL5**, sehingga kunjungan ke
+website ini otomatis tercatat. Untuk melihat datanya:
+
+1. Buka https://analytics.google.com dan masuk dengan akun Google yang
+   memiliki properti GA4 ber-ID `G-JS2LWNBFL5`.
+2. Menu **Laporan → Real-time** untuk melihat pengunjung yang sedang aktif
+   sekarang, atau **Laporan → Akuisisi/Keterlibatan** untuk melihat jumlah
+   pengunjung dan halaman yang paling sering dibuka dari waktu ke waktu.
+3. Data baru biasanya muncul di laporan non-real-time dalam 24–48 jam
+   setelah lalu lintas terjadi.
+
+Catatan: karena aplikasi ini dipakai lewat login (kios petugas + admin),
+sebagian besar "kunjungan" yang tercatat adalah pemakaian internal sekolah,
+bukan tamu umum dari luar — kecuali situs ini juga dibagikan/diakses publik
+di luar alur buku tamu.
